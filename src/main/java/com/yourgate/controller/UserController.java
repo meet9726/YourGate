@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yourgate.dto.UserDTO;
+import com.yourgate.entity.Roles;
 import com.yourgate.entity.User;
+import com.yourgate.repository.RoleRepository;
 import com.yourgate.repository.UserRepository;
 import com.yourgate.service.UserService;
 
@@ -26,10 +29,24 @@ public class UserController {
 	@Autowired
 	public UserRepository userRepo;
 	
+	@Autowired
+	public RoleRepository roleRepo;
+	
 	
 	@PostMapping("/signup")
-	public User saveUser(@RequestBody User user) {
-		return userSvc.saveUser(user);
+	public User saveUser(@RequestBody UserDTO userDTO) {
+		 // Fetch role based on roleId from DTO
+        Roles role = roleRepo.findById(userDTO.getRoleId())
+                .orElseThrow(() -> new RuntimeException("Role not found with ID: " + userDTO.getRoleId()));
+       
+        // Create User object and assign the role
+        User user = new User();
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        user.setRole(role);
+
+        return userSvc.saveUser(user);
 	}
 	
 	
@@ -47,6 +64,6 @@ public class UserController {
 	
 	@GetMapping("/getuser/{id}")
 	public User getUserProfile(@PathVariable("id") Long id) {
-		return userRepo.findById(id).orElseThrow(() -> new RuntimeException("Admin not found with ID: " + id));
+		return userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
 	}
 }

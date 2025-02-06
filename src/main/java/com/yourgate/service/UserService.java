@@ -3,6 +3,7 @@ package com.yourgate.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.yourgate.dto.UserDTO;
 import com.yourgate.entity.User;
 import com.yourgate.repository.UserRepository;
 
