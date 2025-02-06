@@ -18,7 +18,7 @@ import com.yourgate.service.UserService;
 @RequestMapping("/api")		
 public class UserController {
 
-	
+	//for commit
 	
 	@Autowired
 	public UserService userSvc;
