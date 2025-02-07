@@ -31,8 +31,11 @@ public class User {
 	
 	@Column(name = "password")
 	private String password;
-	private LocalDateTime createdDate = LocalDateTime.now();
 	
+	@Column(name = "created_date", columnDefinition = "TIMESTAMP")
+	private LocalDateTime createdDate;
+
+
 	
 	public User() {
 		
