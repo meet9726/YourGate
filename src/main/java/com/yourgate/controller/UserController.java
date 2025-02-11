@@ -1,5 +1,7 @@
 package com.yourgate.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +50,7 @@ public class UserController {
 	public SocietyRepository scoRepo;
 	
 	@PostMapping("/users/register")
-	public User saveUser(@RequestBody UserDTO userDTO) {
+	public User createUser(@RequestBody UserDTO userDTO) {
 		 // Fetch role based on roleId from DTO
         Roles role = roleRepo.findById(userDTO.getRoleId())
                 .orElseThrow(() -> new RuntimeException("Role not found with ID: " + userDTO.getRoleId()));
@@ -56,6 +58,10 @@ public class UserController {
         Society sco = scoRepo.findById(userDTO.getSociety())
         		 .orElseThrow(() -> new RuntimeException("Society not found with ID: " + userDTO.getRoleId()));
      
+        if (userRepo.findByEmail(userDTO.getEmail()).isPresent()) {
+        	throw new RuntimeException("Email Already Register");
+        	
+        }else {
         // Create User object and assign the role
         User user = new User();
         user.setName(userDTO.getName());
@@ -65,19 +71,16 @@ public class UserController {
         user.setBlock(userDTO.getBlock());
         user.setRole(role);
         user.setSociety(sco);
+        user.setPassword(userDTO.getPassword());
         return userRepo.save(user);
+        }
 	}
 	
 	
 	@PostMapping("/login")
-	public User loginUser(@RequestBody User user) {
-		User existingUser = userSvc.findByEmail(user.getEmail());
-		System.out.println("Meet1111");
-		if(existingUser != null && user.getPassword().equals(existingUser.getPassword())) {
-			return existingUser;
-		}else {
-			throw new RuntimeException("Invalid Login credentials");
-		}
+	public User loginUser(@RequestBody Map<String, String> loginData,User user) {		
+		User token = userSvc.loginUser(loginData.get("email"), loginData.get("password"));
+        return token;
 	}
 	
 	

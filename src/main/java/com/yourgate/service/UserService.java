@@ -20,7 +20,26 @@ public class UserService {
 		return userRepo.save(user);
 	}
 	
-	public User findByEmail(String email) {
-		return userRepo.findByEmail(email);
+//	public User findByEmail(String email) {
+//		return userRepo.findByEmail(email);
+//	}
+
+	public User loginUser(String email, String password) {
+		 User user = userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("Invalid Email"));
+		 
+		 if(!user.getEmail().equals(email)) {
+			 throw new RuntimeException("Invalid email or password");
+		 }
+		
+	        
+	     if (!user.getPassword().equals(password)) {
+	         throw new RuntimeException("Invalid email or password");
+	     }
+	     
+	     if(user != null && user.getPassword().equals(user.getPassword())) {
+				return user;
+			}else {
+				throw new RuntimeException("Invalid Login credentials");
+			}
 	}
 }
