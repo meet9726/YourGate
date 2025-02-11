@@ -1,0 +1,120 @@
+
+
+-- select * from users u inner join roles r on u.role_id = r.id;
+-- select * from roles; 
+
+insert into roles (id,name) values (1,'Admin');
+insert into roles (id,name) values (2,'Resident');
+insert into roles (id,name) values (3,'Treasurer');
+insert into roles (id,name) values (4,'Security Guard');
+
+
+CREATE TABLE users (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255),
+    role_id BIGINT,
+    email VARCHAR(255),
+    password VARCHAR(255),
+    PRIMARY KEY (id),
+    CONSTRAINT fk_role_id FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+ ALTER TABLE users
+ ADD COLUMN phone not null UNIQUE 
+ ADD COLUMN flat_no VARCHAR(10),
+ ADD COLUMN block VARCHAR(10);
+
+
+-- 🚶 Visitor Log (Entry & Exit Tracking)
+CREATE TABLE visitor_logs (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    visitor_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(15),
+    purpose VARCHAR(100),
+    flat_no VARCHAR(10) NOT NULL,
+    entry_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    exit_time TIMESTAMP NULL,
+    guard_id INT NOT NULL,
+    FOREIGN KEY (guard_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+-- 🏢 Society (Building and Flats)
+CREATE TABLE society (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    city VARCHAR(50),
+    state VARCHAR(50),
+    pincode VARCHAR(10)
+);
+
+-- 🏠 Flats (Belong to a Society)
+CREATE TABLE flats (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    flat_no VARCHAR(10) NOT NULL,
+    block VARCHAR(10) NOT NULL,
+    society_id INT NOT NULL,
+    owner_id BIGINT,
+    tenant_id BIGINT,
+    FOREIGN KEY (society_id) REFERENCES society(id) ON DELETE CASCADE,
+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (tenant_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+
+-- 💰 Payments (Maintenance & Bills)
+CREATE TABLE payments (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    flat_id INT NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    due_date DATE NOT NULL,
+    status ENUM('PENDING', 'PAID', 'OVERDUE') DEFAULT 'PENDING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (flat_id) REFERENCES flats(id) ON DELETE CASCADE
+);
+
+
+-- 📢 Notices (Admin Messages to Residents)
+CREATE TABLE notices (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    message TEXT NOT NULL,
+    created_by BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+
+-- 🚨 Security Alerts (Emergency Reports)
+CREATE TABLE security_alerts (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    message VARCHAR(255) NOT NULL,
+    alert_type ENUM('FIRE', 'MEDICAL', 'INTRUSION', 'OTHER') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+🔗 Relationships Between Tables
+Users (Residents, Guards, Admins)
+Flats → Each flat belongs to a society
+Complaints → Residents raise complaints
+Visitor Logs → Guards log visitor entry/exit
+Payments → Residents pay maintenance bills
+Notices → Admins post announcements
+Security Alerts → Emergency alerts from residents
+
+
+
+✅ Multi-role Users (Residents, Guards, Admins)
+✅ Complaint Management with tracking
+✅ Visitor Entry/Exit Logs
+✅ Flat & Society Management
+✅ Maintenance Payments & Due Tracking
+✅ Admin Notices & Announcements
+✅ Emergency Security Alerts

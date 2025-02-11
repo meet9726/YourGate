@@ -1,0 +1,12 @@
+api/users/register
+
+{
+    "name":"Meet khalas",
+    "roleId":1,
+    "password":"123Admin",
+    "email":"meetkhalas8776@gmail.com",
+    "phone": "9876543210",
+    "flatNo": "A-101",
+    "block": "A",
+    "society": 101
+}
