@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,7 +27,7 @@ public class Visitor {
 	@Column(name = "v_phone")
 	private Long phone;
 	
-	@Column(name = "is_checked_in", columnDefinition = "DATETIME")
+	@Column(name = "is_checked_in", columnDefinition = "DATETIME",  updatable = false)
 	private LocalDateTime isCheckedIn;
 
 	
@@ -79,6 +80,11 @@ public class Visitor {
 		public Visitor() {
 		
 	}
+		
+		 @PrePersist
+		    protected void onCreate() {
+		        isCheckedIn = LocalDateTime.now();
+		    }
 	
 	
 }
