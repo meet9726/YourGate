@@ -10,6 +10,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name= "society")
 public class Society {
+	
+	
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +42,13 @@ public class Society {
         this.city = city;
         this.state = state;
         this.pincode = pincode;
+        
+
+//		this.firstName = firstName;
+//		this.lastName = lastName;
+//		this.regNumber = regNumber;
+//		this.createdDate = createdDate;
+//		this.password = password;
     }
 
  // Getters and Setters

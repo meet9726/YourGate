@@ -58,7 +58,7 @@ public class User {
 	    private Society society;  // ✅ Link user to society
 
 	    @Column(name = "status", columnDefinition = "BOOLEAN DEFAULT true")
-	    private Boolean status = true;  // ✅ Active or inactive user
+	    private Boolean status = false;  // ✅ Active or inactive user
 
 
 	    @Column(name = "updated_date", columnDefinition = "DATETIME")
@@ -87,7 +87,7 @@ public class User {
         this.flatNo = flatNo;
         this.block = block;
         this.society = society;
-        this.status = true;
+        this.status = false;
     }
 	
 	

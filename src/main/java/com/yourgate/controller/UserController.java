@@ -72,6 +72,7 @@ public class UserController {
         user.setRole(role);
         user.setSociety(sco);
         user.setPassword(userDTO.getPassword());
+        user.setStatus(userDTO.getStatus());
         return userRepo.save(user);
         }
 	}

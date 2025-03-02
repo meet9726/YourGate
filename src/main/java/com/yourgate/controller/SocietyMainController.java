@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yourgate.entity.Society;
 import com.yourgate.entity.SocietyMain;
 import com.yourgate.repository.SocietyMainRepository;
+import com.yourgate.repository.SocietyRepository;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +27,17 @@ public class SocietyMainController {
 	@Autowired
 	public SocietyMainRepository SocietyMnRepo;
 	
+	@Autowired
+	public SocietyRepository SocietyRepo;
+	
 	@PostMapping("/addsociety")
 	public SocietyMain addSociety(@RequestBody SocietyMain scMain) {
 		return SocietyMnRepo.save(scMain);
+	}
+	
+	@PostMapping("/regsociety")
+	public Society regSociety(@RequestBody Society scMain) {
+		return SocietyRepo.save(scMain);
 	}
 	
 	@DeleteMapping("/{id}")
